@@ -15,18 +15,18 @@ Paste a link, pick your quality, and pull media straight to your disk. Clean, co
 └─────────────────────────────────────────────────────────────── vortex v2.0 ─┘
 ```
 
-## Requirements
+## Quick Install
 
-Already satisfied on this machine:
+Clone or download this repository, then run the installer:
 
-| Need | Why | Check |
-|---|---|---|
-| Python 3.9+ | runs the app | `python --version` |
-| `yt-dlp` | the download engine | `yt-dlp --version` |
-| `ffmpeg` on PATH | merges video+audio, makes MP3 | `ffmpeg -version` |
-| `rich` | the terminal UI | `pip show rich` |
+- **Windows:** Double-click **`install.bat`** (installs Python packages and sets up FFmpeg automatically via winget).
+- **Linux / macOS:** Run `chmod +x install.sh && ./install.sh`
 
-If something is missing: `pip install -U yt-dlp rich` and put ffmpeg on your PATH.
+Or install manually:
+```bash
+pip install -r requirements.txt
+```
+*(Make sure `ffmpeg` is installed and available on your PATH for audio/video merging and MP3 conversion).*
 
 ## Start it
 
