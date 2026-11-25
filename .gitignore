@@ -1,0 +1,25 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# User downloads & personal history
+downloads/
+history.json
+
+# Local configurations with private paths or cookies
+config.json
+
+# Environments
+.env
+.venv/
+env/
+venv/
+ENV/
+
+# Temporary / OS files
+*.part
+*.ytdl
+*.temp
+.DS_Store
+Thumbs.db
