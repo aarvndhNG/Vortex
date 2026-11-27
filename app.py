@@ -33,7 +33,7 @@ EXAMPLES = """examples:
   vortex URL1 URL2 -q 720                batch at 720p
   vortex URL -a                          audio only, mp3
   vortex URL -i                          inspect metadata without downloading
-  vortex URL -o D:\\videos --cookies chrome
+  vortex URL -o ~/videos --cookies chrome
 """
 
 

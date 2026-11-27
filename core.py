@@ -23,7 +23,7 @@ class ProbeError(RuntimeError):
 
 
 class _QuietLogger:
-    """Swallow yt-dlp's own console chatter; vd renders everything itself."""
+    """Swallow yt-dlp's own console chatter; Vortex renders everything itself."""
 
     def debug(self, msg): pass
     def info(self, msg): pass

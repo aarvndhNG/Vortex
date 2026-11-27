@@ -46,7 +46,7 @@ def save(cfg: dict) -> None:
 
 
 def download_dir(cfg: dict) -> Path:
-    """Resolve the download folder, relative paths living next to vd."""
+    """Resolve the download folder, relative paths living next to Vortex."""
     raw = str(cfg.get("download_dir") or "downloads").strip() or "downloads"
     path = Path(raw).expanduser()
     if not path.is_absolute():

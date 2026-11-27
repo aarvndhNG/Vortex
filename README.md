@@ -2,6 +2,13 @@
 
 Paste a link, pick your quality, and pull media straight to your disk. Clean, colorful terminal interface with real-time speed sparklines and support for 1,800+ sites.
 
+<p align="center">
+  <img src="assets/demo.jpg" alt="Vortex demo — downloading a batch queue" width="720">
+</p>
+
+<details>
+<summary>ASCII preview (for terminals without images)</summary>
+
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
 │ ██╗   ██╗ ██████╗ ██████╗ ████████╗███████╗██╗  ██╗   engine  yt-dlp        │
@@ -14,6 +21,7 @@ Paste a link, pick your quality, and pull media straight to your disk. Clean, co
 │  tip   paste several links in a row to build a queue                        │
 └─────────────────────────────────────────────────────────────── vortex v2.0 ─┘
 ```
+</details>
 
 ## Quick Install
 
@@ -81,8 +89,8 @@ exists as VP9/AV1/Opus, you get `.mkv` or `.webm` instead — same quality,
 different container.
 
 Batches ask for one quality up front and apply it to everything. If the exact
-file already sits in the download folder, vd shows `kept` instead of fetching
-it again — delete or rename the file to force a fresh copy.
+file already sits in the download folder, Vortex shows `kept` instead of
+fetching it again — delete or rename the file to force a fresh copy.
 
 ## The screen
 
@@ -122,7 +130,7 @@ python app.py URL                          best quality, menu-free
 python app.py URL1 URL2 -q 720             batch at 720p
 python app.py URL -a                       audio only, MP3
 python app.py URL -i                       print metadata, download nothing
-python app.py URL -o D:\videos             different folder
+python app.py URL -o ~/videos              different folder
 python app.py URL --cookies chrome         use Chrome's session
 python app.py URL --no-thumbnail --no-metadata
 python app.py --version
@@ -140,8 +148,8 @@ Exit code is `0` when every job succeeds, `1` otherwise — handy in scripts.
 | `config.py` | defaults, paths, history log |
 | `config.json` | created the first time you change a setting |
 | `history.json` | created after the first download (last 500 entries) |
-| `downloads\` | default output folder |
-| `vortex.cmd` / `run.cmd` | double-click launcher |
+| `downloads/` | default output folder |
+| `vortex.cmd` / `run.cmd` | double-click launcher (Windows) |
 
 ## When something breaks
 
@@ -157,7 +165,7 @@ cookies from your browser, or pass `--cookies chrome`.
 **DRM-protected services** (Netflix, Disney+, Prime Video, Spotify) are not
 supported and never will be here. That's a legal wall, not a bug.
 
-**Nothing appears in `downloads\`** — check the results card: a red `failed`
+**Nothing appears in `downloads/`** — check the results card: a red `failed`
 row prints the reason under the title.
 
 ## Fair use
