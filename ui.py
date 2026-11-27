@@ -26,7 +26,7 @@ VERSION = "2.0.0"
 # --------------------------------------------------------------------------- #
 
 ACCENT = "#22d3ee"
-ACCENT_SOFT = "#67e8f9"
+ACCENT_SOFT = "#38bdf8"
 VIOLET = "#a78bfa"
 PINK = "#f472b6"
 OK = "#4ade80"
@@ -35,6 +35,8 @@ WARN = "#fbbf24"
 MUTED = "#94a3b8"
 FAINT = "#475569"
 SURFACE = "#1e293b"
+TRACK = "#1e293b"
+BORDER = "#334155"
 
 LIGHT_BG = {"white", "yellow", "cyan", MUTED, "#e2e8f0", "#a3e635"}
 
@@ -42,46 +44,46 @@ _URLS = re.compile(r"https?://\S+")
 
 # domain -> (label, colour)
 PLATFORMS: dict[str, tuple[str, str]] = {
-    "youtube.com": ("YouTube", "red"),
-    "youtu.be": ("YouTube", "red"),
-    "music.youtube.com": ("YouTube Music", "red"),
-    "tiktok.com": ("TikTok", "magenta"),
-    "instagram.com": ("Instagram", "magenta"),
-    "instagr.am": ("Instagram", "magenta"),
-    "twitter.com": ("X", "white"),
-    "x.com": ("X", "white"),
-    "facebook.com": ("Facebook", "blue"),
-    "fb.watch": ("Facebook", "blue"),
-    "reddit.com": ("Reddit", "dark_orange3"),
-    "redd.it": ("Reddit", "dark_orange3"),
-    "vimeo.com": ("Vimeo", "cyan"),
-    "twitch.tv": ("Twitch", "medium_purple1"),
-    "soundcloud.com": ("SoundCloud", "dark_orange3"),
-    "dailymotion.com": ("Dailymotion", "blue"),
-    "dai.ly": ("Dailymotion", "blue"),
-    "pinterest.com": ("Pinterest", "red"),
-    "pin.it": ("Pinterest", "red"),
-    "snapchat.com": ("Snapchat", "yellow"),
-    "linkedin.com": ("LinkedIn", "blue"),
-    "threads.net": ("Threads", "white"),
-    "threads.com": ("Threads", "white"),
-    "bsky.app": ("Bluesky", "bright_blue"),
-    "bilibili.com": ("Bilibili", "bright_magenta"),
-    "rumble.com": ("Rumble", "green"),
-    "kick.com": ("Kick", "green"),
-    "odysee.com": ("Odysee", "red"),
-    "streamable.com": ("Streamable", "cyan"),
-    "imgur.com": ("Imgur", "green"),
-    "giphy.com": ("Giphy", "magenta"),
-    "tumblr.com": ("Tumblr", "blue"),
-    "vk.com": ("VK", "blue"),
-    "ok.ru": ("OK.ru", "dark_orange3"),
-    "weibo.com": ("Weibo", "red"),
-    "nicovideo.jp": ("NicoNico", "white"),
-    "9gag.com": ("9GAG", "white"),
+    "youtube.com": ("YouTube", "#ef4444"),
+    "youtu.be": ("YouTube", "#ef4444"),
+    "music.youtube.com": ("YouTube Music", "#ef4444"),
+    "tiktok.com": ("TikTok", "#ec4899"),
+    "instagram.com": ("Instagram", "#d946ef"),
+    "instagr.am": ("Instagram", "#d946ef"),
+    "twitter.com": ("X", "#334155"),
+    "x.com": ("X", "#334155"),
+    "facebook.com": ("Facebook", "#2563eb"),
+    "fb.watch": ("Facebook", "#2563eb"),
+    "reddit.com": ("Reddit", "#f97316"),
+    "redd.it": ("Reddit", "#f97316"),
+    "vimeo.com": ("Vimeo", "#06b6d4"),
+    "twitch.tv": ("Twitch", "#8b5cf6"),
+    "soundcloud.com": ("SoundCloud", "#f97316"),
+    "dailymotion.com": ("Dailymotion", "#0284c7"),
+    "dai.ly": ("Dailymotion", "#0284c7"),
+    "pinterest.com": ("Pinterest", "#e11d48"),
+    "pin.it": ("Pinterest", "#e11d48"),
+    "snapchat.com": ("Snapchat", "#eab308"),
+    "linkedin.com": ("LinkedIn", "#0284c7"),
+    "threads.net": ("Threads", "#1e293b"),
+    "threads.com": ("Threads", "#1e293b"),
+    "bsky.app": ("Bluesky", "#0284c7"),
+    "bilibili.com": ("Bilibili", "#ec4899"),
+    "rumble.com": ("Rumble", "#22c55e"),
+    "kick.com": ("Kick", "#22c55e"),
+    "odysee.com": ("Odysee", "#ef4444"),
+    "streamable.com": ("Streamable", "#06b6d4"),
+    "imgur.com": ("Imgur", "#22c55e"),
+    "giphy.com": ("Giphy", "#ec4899"),
+    "tumblr.com": ("Tumblr", "#2563eb"),
+    "vk.com": ("VK", "#2563eb"),
+    "ok.ru": ("OK.ru", "#f97316"),
+    "weibo.com": ("Weibo", "#ef4444"),
+    "nicovideo.jp": ("NicoNico", "#64748b"),
+    "9gag.com": ("9GAG", "#334155"),
     "archive.org": ("Archive.org", MUTED),
-    "ted.com": ("TED", "red"),
-    "bbc.co.uk": ("BBC", "red"),
+    "ted.com": ("TED", "#ef4444"),
+    "bbc.co.uk": ("BBC", "#ef4444"),
 }
 
 STAGE_NAMES = {
@@ -214,7 +216,7 @@ def quality_label(quality: str) -> str:
 
 
 def size_bar(size: int, peak: int, width: int = 10) -> Text:
-    """Gradient-coloured proportional bar for the quality menu."""
+    """Gradient-coloured proportional solid block bar for the quality menu."""
     if not peak or size <= 0:
         return Text("")
     ratio = size / peak
@@ -222,7 +224,7 @@ def size_bar(size: int, peak: int, width: int = 10) -> Text:
     colour = ACCENT if ratio >= 0.75 else ACCENT_SOFT if ratio >= 0.4 else OK
     bar = Text()
     bar.append("█" * filled, style=colour)
-    bar.append("░" * (width - filled), style=FAINT)
+    bar.append("█" * (width - filled), style=TRACK)
     return bar
 
 
@@ -230,21 +232,43 @@ def size_bar(size: int, peak: int, width: int = 10) -> Text:
 # header
 # --------------------------------------------------------------------------- #
 
-def _logo() -> Text:
-    # Cyber neon gradient across the 6 lines: Cyan -> Sky -> Indigo -> Violet -> Pink
-    _styles = [
-        "bold #22d3ee",
-        "bold #38bdf8",
-        "bold #818cf8",
-        "bold #a78bfa",
-        "bold #c084fc",
-        "bold #f472b6",
+def _gradient_color(ratio: float) -> str:
+    """Interpolate across the horizontal neon spectrum: Cyan -> Sky -> Indigo -> Violet -> Magenta -> Pink."""
+    stops = [
+        (0.00, (34, 211, 238)),   # #22d3ee cyan
+        (0.20, (56, 189, 248)),   # #38bdf8 sky
+        (0.40, (129, 140, 248)),  # #818cf8 indigo
+        (0.60, (167, 139, 250)),  # #a78bfa violet
+        (0.80, (216, 114, 246)),  # #d872f6 magenta
+        (1.00, (244, 114, 182)),  # #f472b6 pink
     ]
+    ratio = max(0.0, min(1.0, ratio))
+    for i in range(len(stops) - 1):
+        r1, c1 = stops[i]
+        r2, c2 = stops[i + 1]
+        if r1 <= ratio <= r2:
+            t = (ratio - r1) / (r2 - r1) if r2 > r1 else 0
+            r = int(c1[0] + (c2[0] - c1[0]) * t)
+            g = int(c1[1] + (c2[1] - c1[1]) * t)
+            b = int(c1[2] + (c2[2] - c1[2]) * t)
+            return f"#{r:02x}{g:02x}{b:02x}"
+    return "#f472b6"
+
+
+def _logo() -> Text:
+    """Horizontal neon gradient across letters: Cyan -> Sky -> Indigo -> Violet -> Magenta -> Pink."""
     text = Text()
-    for index, line in enumerate(LOGO):
-        if index:
+    max_len = max(len(line) for line in LOGO) or 1
+    for row_idx, line in enumerate(LOGO):
+        if row_idx:
             text.append("\n")
-        text.append(line, style=_styles[index % len(_styles)])
+        for col_idx, ch in enumerate(line):
+            if ch.strip():
+                ratio = col_idx / max(1, max_len - 1)
+                color = _gradient_color(ratio)
+                text.append(ch, style=f"bold {color}")
+            else:
+                text.append(ch)
     return text
 
 
@@ -269,9 +293,9 @@ def banner(
     )
 
     # Stats grid
-    stats = Table.grid(padding=(0, 1))
+    stats = Table.grid(padding=(0, 2))
     stats.add_column(style=MUTED, justify="right", no_wrap=True, width=8)
-    stats.add_column(overflow="fold")
+    stats.add_column(no_wrap=True)
     stats.add_row("engine", Text(f"yt-dlp {engine}", style="white"))
     stats.add_row("ffmpeg", ffmpeg_state)
     stats.add_row("folder", Text(short_path(outdir, 32), style=ACCENT_SOFT))
@@ -283,13 +307,13 @@ def banner(
     tip = random.choice(TIPS)
     tip_line = Text.assemble(
         (" tip ", f"bold black on {ACCENT}"),
-        (f"  {tip}", FAINT),
+        (f"  {tip}", MUTED),
     )
 
     # Adaptive layout: side-by-side if terminal is wide enough, stacked if narrow
-    if console.width >= 96:
-        layout = Table.grid(padding=(0, 3), expand=True)
-        layout.add_column(no_wrap=True, width=54)
+    if console.width >= 90:
+        layout = Table.grid(padding=(0, 2), expand=True)
+        layout.add_column(no_wrap=True, width=53)
         layout.add_column(ratio=1, vertical="middle")
         layout.add_row(_logo(), stats)
         content = [layout, Text(""), tip_line]
@@ -299,8 +323,8 @@ def banner(
     console.print(Panel(
         Group(*content),
         box=box.ROUNDED,
-        border_style=ACCENT,
-        padding=(0, 1),
+        border_style=BORDER,
+        padding=(0, 2),
         subtitle=f"[{FAINT}]vortex v{VERSION}[/]",
         subtitle_align="right",
     ))
@@ -340,9 +364,9 @@ def menu(console: Console, title: str, rows, prompt: str = "Choose", default=Non
         body,
         title=f"[bold {ACCENT}]{escape(title)}[/]",
         title_align="left",
-        border_style=ACCENT,
+        border_style=BORDER,
         box=box.ROUNDED,
-        padding=(0, 1),
+        padding=(0, 2),
     ))
     return ask_choice(console, keys, prompt, default=default)
 
@@ -515,8 +539,8 @@ def queue_panel(jobs, limit: int = 10) -> Panel:
         table.add_row("", "", f"[dim]… {len(jobs) - limit} more[/]", "")
 
     title = f"[bold {ACCENT}]queue[/] [dim]·[/] {len(jobs)} item{'s' if len(jobs) != 1 else ''}"
-    return Panel(table, box=box.ROUNDED, border_style=FAINT,
-                 padding=(0, 1), title=title, title_align="left")
+    return Panel(table, box=box.ROUNDED, border_style=BORDER,
+                 padding=(0, 2), title=title, title_align="left")
 
 
 def results_panel(results: list[core.DownloadResult], elapsed: float, outdir) -> Panel:
@@ -581,8 +605,8 @@ def results_panel(results: list[core.DownloadResult], elapsed: float, outdir) ->
     return Panel(
         Group(table, Text(""), footer),
         box=box.ROUNDED,
-        border_style=colour,
-        padding=(0, 1),
+        border_style=BORDER,
+        padding=(0, 2),
         title=f"[bold {colour}]{verdict}[/]",
         title_align="left",
     )
@@ -644,13 +668,34 @@ def help_panel() -> Panel:
         Text(""),
         _site_grid(),
     )
-    return Panel(body, box=box.ROUNDED, border_style=VIOLET, padding=(0, 2),
+    return Panel(body, box=box.ROUNDED, border_style=BORDER, padding=(0, 2),
                  title=f"[bold {VIOLET}]help[/]", title_align="left")
 
 
 # --------------------------------------------------------------------------- #
-# live download screen
+# live download screen & block progress bar
 # --------------------------------------------------------------------------- #
+
+class BlockBar:
+    """A solid, thick, modern block progress bar matching the reference terminal UI."""
+
+    def __init__(self, completed: float, style: str = ACCENT, track_style: str = TRACK):
+        self.completed = max(0.0, min(1.0, float(completed)))
+        self.style = style
+        self.track_style = track_style
+
+    def __rich_console__(self, console: Console, options):
+        width = max(8, options.max_width or 40)
+        filled = int(round(self.completed * width))
+        empty = max(0, width - filled)
+
+        bar = Text()
+        if filled > 0:
+            bar.append("█" * filled, style=self.style)
+        if empty > 0:
+            bar.append("█" * empty, style=self.track_style)
+        yield bar
+
 
 class DownloadScreen:
     """A live view of a running batch: one summary card plus the queue."""
@@ -737,20 +782,19 @@ class DownloadScreen:
             done += self._fraction()
         return max(0.0, min(1.0, done / len(self.jobs)))
 
-    def _sparkline(self, values, width: int = 16) -> Text:
+    def _sparkline(self, values, width: int = 14) -> Text:
         """Tiny bar graph of recent speeds."""
         samples = [float(v or 0) for v in values][-width:]
         if not samples:
             return Text("")
         peak = max(samples) or 1.0
         graph = Text()
-        blocks = "▁▂▃▄▅▆▇█"
+        blocks = " ▂▃▄▅▆▇█"
         for value in samples:
             level = int(round((value / peak) * (len(blocks) - 1)))
-            style = ACCENT_SOFT if value > 0 else FAINT
+            style = ACCENT if value > 0 else FAINT
             graph.append(blocks[max(0, min(level, len(blocks) - 1))], style=style)
         return graph
-
 
     def _summary(self, width: int) -> Panel:
         job = self.jobs[self.active] if 0 <= self.active < len(self.jobs) else None
@@ -758,97 +802,115 @@ class DownloadScreen:
         total_items = len(self.jobs)
         elapsed = max(0.0, time.monotonic() - self.started)
 
-        title = Text()
-        if job:
-            title.append(short(job["label"], max(24, width - 28)), style="bold white")
-        else:
-            title.append("preparing", style=f"bold {MUTED}")
+        # Line 1: [Platform] Title on left, Quality · Size on right
+        top = Table.grid(padding=(0, 1), expand=True)
+        top.add_column(ratio=1, overflow="fold")
+        top.add_column(no_wrap=True, justify="right", style=MUTED)
 
-        meta = Text()
+        left_head = Text()
         if job:
-            meta.append_text(Text.from_markup(chip(job["url"])))
-            meta.append("  ·  ", style=FAINT)
-            meta.append(quality_label(job["quality"]), style=ACCENT_SOFT)
+            left_head.append_text(Text.from_markup(chip(job["url"])))
+            left_head.append("  ")
+            left_head.append(short(job["label"], max(24, width - 36)), style="bold white")
+        else:
+            left_head.append("preparing…", style=f"bold {MUTED}")
+
+        right_head = Text()
+        if job:
+            right_head.append(quality_label(job["quality"]), style=ACCENT_SOFT)
             if job["total"] > 1024:
-                meta.append("  ·  ", style=FAINT)
-                meta.append(human_size(job["total"]), style="white")
-        else:
-            meta.append(f"{finished} of {total_items} finished", style=MUTED)
+                right_head.append("  ·  ", style=FAINT)
+                right_head.append(human_size(job["total"]), style="white")
 
+        top.add_row(left_head, right_head)
+
+        # Line 2: Solid Cyan Block Progress Bar + Percentage
         fraction = self._fraction()
         processing = bool(job and job["phase"])
-        bar = ProgressBar(
-            total=1.0,
-            completed=fraction,
-            width=None,
-            complete_style=VIOLET if processing else ACCENT,
-            finished_style=VIOLET if processing else OK,
-            pulse_style=VIOLET,
-        )
-        head = Table.grid(padding=(0, 2), expand=True)
-        head.add_column(ratio=1)
-        head.add_column(no_wrap=True, justify="right", width=5)
-        head.add_row(bar, Text(f"{int(fraction * 100):>3}%", style="bold white"))
+        bar_colour = VIOLET if processing else ACCENT
 
-        stats = Text()
+        bar_grid = Table.grid(padding=(0, 2), expand=True)
+        bar_grid.add_column(ratio=1)
+        bar_grid.add_column(no_wrap=True, justify="right", width=5)
+        bar_grid.add_row(
+            BlockBar(fraction, style=bar_colour, track_style=TRACK),
+            Text(f"{int(fraction * 100):>3}%", style=f"bold {bar_colour}"),
+        )
+
+        # Line 3: Stats on left, Speed Sparkline on right
+        stats_grid = Table.grid(padding=(0, 2), expand=True)
+        stats_grid.add_column(ratio=1, style="white")
+        stats_grid.add_column(no_wrap=True, justify="right")
+
+        stats_left = Text()
         if job and job["status"] == "active":
             if job["phase"]:
-                stats.append(f" {job['phase']} ", style=f"bold white on {VIOLET}")
-                stats.append(" ", style="")
+                stats_left.append(f" {job['phase']} ", style=f"bold white on {VIOLET}")
+                stats_left.append("  ·  ", style=FAINT)
             else:
                 if job["total"]:
-                    stats.append(
+                    stats_left.append(
                         f"{human_size(job['done'])} / {human_size(job['total'])}",
                         style="white",
                     )
-                    stats.append("  ·  ", style=FAINT)
-                stats.append(
+                    stats_left.append("  ·  ", style=FAINT)
+                stats_left.append(
                     f"{human_size(job['speed'])}/s" if job["speed"] else "connecting…",
                     style="white" if job["speed"] else MUTED,
                 )
                 if job["eta"]:
-                    stats.append("  ·  ", style=FAINT)
-                    stats.append(f"eta {duration_short(job['eta'])}", style=MUTED)
-                if len(self.speeds) > 2:
-                    stats.append("  ·  ", style=FAINT)
-                    stats.append_text(self._sparkline(self.speeds))
+                    stats_left.append("  ·  ", style=FAINT)
+                    stats_left.append(f"eta {duration_short(job['eta'])}", style=MUTED)
+                stats_left.append("  ·  ", style=FAINT)
         else:
-            stats.append(f"{finished}/{total_items} files", style=MUTED)
-        stats.append("  ·  ", style=FAINT)
-        stats.append(duration_short(elapsed), style=MUTED)
+            stats_left.append(f"{finished}/{total_items} files", style=MUTED)
+            stats_left.append("  ·  ", style=FAINT)
 
-        parts: list = [title, meta, Text(""), head, stats]
+        stats_left.append(duration_short(elapsed), style=MUTED)
+
+        spark = (
+            self._sparkline(self.speeds, width=14)
+            if (job and job["status"] == "active" and len(self.speeds) > 2)
+            else Text("")
+        )
+        stats_grid.add_row(stats_left, spark)
+
+        parts: list = [top, bar_grid, stats_grid]
+
+        # Line 4: Batch progress bar (if multiple items)
         if total_items > 1:
-            batch = Table.grid(padding=(0, 2), expand=True)
-            batch.add_column(no_wrap=True, style=FAINT, width=5)
-            batch.add_column(ratio=1)
-            batch.add_column(no_wrap=True, justify="right", style=MUTED, width=7)
-            batch.add_row(
-                Text("batch", style=FAINT),
-                ProgressBar(total=1.0, completed=self._overall(), width=None,
-                            complete_style=VIOLET, finished_style=OK,
-                            pulse_style=ACCENT),
+            overall = self._overall()
+            batch_grid = Table.grid(padding=(0, 2), expand=True)
+            batch_grid.add_column(no_wrap=True, style=MUTED, width=6)
+            batch_grid.add_column(ratio=1)
+            batch_grid.add_column(no_wrap=True, justify="right", width=5)
+            batch_grid.add_column(no_wrap=True, justify="right", width=6, style=MUTED)
+            batch_grid.add_row(
+                Text("batch", style=MUTED),
+                BlockBar(overall, style=ACCENT_SOFT, track_style=TRACK),
+                Text(f"{int(overall * 100):>3}%", style=f"bold {ACCENT_SOFT}"),
                 Text(f"{finished}/{total_items}", style=MUTED),
             )
-            parts.extend([Text(""), batch])
+            parts.append(batch_grid)
 
         count = min(finished + (1 if job else 0), total_items)
+        title = f"[{MUTED}]downloading[/] [dim]·[/] [{ACCENT}]{count}/{total_items}[/]"
         return Panel(
             Group(*parts),
             box=box.ROUNDED,
-            border_style=ACCENT,
+            border_style=BORDER,
             padding=(0, 2),
-            title=f"[bold {ACCENT}]downloading[/] [dim]·[/] {count}/{total_items}",
+            title=title,
             title_align="left",
         )
 
     def _queue(self) -> Panel:
-        table = Table.grid(padding=(0, 2))
-        table.add_column(width=2, justify="center")
-        table.add_column(no_wrap=True, width=14)             # chip — fixed width
-        table.add_column(ratio=1, overflow="fold", style="white")
-        table.add_column(no_wrap=True, justify="right", style=MUTED)
-        table.add_column(no_wrap=True, justify="right", width=12, style="white")
+        table = Table.grid(padding=(0, 2), expand=True)
+        table.add_column(width=2, justify="center")          # status dot
+        table.add_column(no_wrap=True, width=13)             # platform chip
+        table.add_column(ratio=1, overflow="fold")           # title
+        table.add_column(no_wrap=True, justify="right", width=8, style=MUTED)  # quality
+        table.add_column(no_wrap=True, justify="right", width=8)               # status text
 
         count = len(self.jobs)
         if count <= 10:
@@ -865,42 +927,50 @@ class DownloadScreen:
             job = self.jobs[index]
             status = job["status"]
             if status == "done":
-                dot, info = f"[{OK}]●[/]", human_size(job["size"])
+                dot = Text("●", style=f"bold {OK}")
+                status_text = Text("done", style=f"bold {OK}")
+                label_style = "white"
             elif status == "kept":
-                dot, info = f"[{MUTED}]●[/]", "[dim]on disk[/]"
+                dot = Text("●", style=f"bold {MUTED}")
+                status_text = Text("on disk", style=f"dim {MUTED}")
+                label_style = "white"
             elif status == "failed":
-                dot, info = f"[{BAD}]●[/]", f"[{BAD}]failed[/]"
+                dot = Text("●", style=f"bold {BAD}")
+                status_text = Text("failed", style=f"bold {BAD}")
+                label_style = "white"
             elif status == "active":
-                dot = f"[{ACCENT}]●[/]"
+                dot = Text("●", style=f"bold {ACCENT}")
                 if job["total"]:
-                    info = f"{int(100 * job['done'] / job['total'])}%"
+                    pct = int(100 * job["done"] / job["total"])
+                    status_text = Text(f"{pct}%", style=f"bold {ACCENT}")
                 elif job["phase"]:
-                    info = f"[{VIOLET}]{job['phase']}[/]"
+                    status_text = Text(job["phase"], style=f"bold {VIOLET}")
                 else:
-                    info = "…"
-            else:
-                dot, info = f"[{FAINT}]·[/]", "[dim]queued[/]"
+                    status_text = Text("…", style=f"bold {ACCENT}")
+                label_style = "bold white"
+            else:  # queued
+                dot = Text("·", style=f"bold {FAINT}")
+                status_text = Text("queued", style=f"dim {FAINT}")
+                label_style = "dim white"
 
-            label_style = "bold white" if status == "active" else (
-                "dim" if status == "queued" else "white"
-            )
             table.add_row(
                 dot,
-                chip(job["url"]),
-                Text(short(job["label"], 46), style=label_style),
+                Text.from_markup(chip(job["url"])),
+                Text(short(job["label"], 50), style=label_style),
                 quality_label(job["quality"]),
-                info,
+                status_text,
             )
 
         if end < count:
             table.add_row("", "", f"[dim]… {count - end} more below[/]", "", "")
 
+        title = f"[{MUTED}]queue[/]"
         return Panel(
             table,
             box=box.ROUNDED,
-            border_style=FAINT,
-            padding=(0, 1),
-            title=f"[bold {ACCENT}]queue[/] [dim]·[/] {count} item{'s' if count != 1 else ''}",
+            border_style=BORDER,
+            padding=(0, 2),
+            title=title,
             title_align="left",
         )
 
